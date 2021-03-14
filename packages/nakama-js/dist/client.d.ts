@@ -252,6 +252,7 @@ export declare class Client {
     readStorageObjects(session: Session, request: ApiReadStorageObjectsRequest): Promise<StorageObjects>;
     rpc(session: Session, id: string, input: object): Promise<RpcResponse>;
     rpcGet(id: string, session?: Session, httpKey?: string, input?: object): Promise<RpcResponse>;
+    sessionRefresh(session: Session): Promise<Session>;
     unlinkApple(session: Session, request: ApiAccountApple): Promise<boolean>;
     unlinkCustom(session: Session, request: ApiAccountCustom): Promise<boolean>;
     unlinkDevice(session: Session, request: ApiAccountDevice): Promise<boolean>;

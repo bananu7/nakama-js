@@ -30,8 +30,10 @@ export interface ISession {
 export class Session {
   public constructor(
     readonly token: string,
+    readonly refresh_token: string,
     readonly created_at: number,
     readonly expires_at: number,
+    readonly refresh_expires_at: number,
     readonly username: string,
     readonly user_id: string,
     readonly vars: object) {
@@ -41,7 +43,7 @@ export class Session {
     return (this.expires_at - currenttime) < 0;
   }
 
-  static restore(jwt: string): Session {
+  static restore(jwt: string, refreshToken: string): Session {
     const createdAt = Math.floor(new Date().getTime() / 1000);
     const parts = jwt.split('.');
     if (parts.length != 3) {
@@ -50,6 +52,13 @@ export class Session {
     const decoded = JSON.parse(atob(parts[1])); // FIXME: use base64 polyfill for React Native.
     const expiresAt = Math.floor(parseInt(decoded['exp']));
 
-    return new Session(jwt, createdAt, expiresAt, decoded['usn'], decoded['uid'], decoded['vrs']);
+    const refreshParts = refreshToken.split('.');
+    if (refreshParts.length != 3) {
+      throw 'refreshToken is not valid.';
+    }
+    const refreshDecoded = JSON.parse(atob(refreshParts[1]));
+    const refreshExpiresAt = Math.floor(parseInt(refreshDecoded['exp']));
+
+    return new Session(jwt, refreshToken, createdAt, expiresAt, refreshExpiresAt, decoded['usn'], decoded['uid'], decoded['vrs']);
   }
 }

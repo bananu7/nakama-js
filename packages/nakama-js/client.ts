@@ -485,7 +485,7 @@ export class Client {
     };
 
     return this.apiClient.authenticateApple(request, create, username, options).then((apiSession : ApiSession) => {
-      return Session.restore(apiSession.token || "");
+      return Session.restore(apiSession.token || "", apiSession.refresh_token || "");
     });
   }
 
@@ -496,7 +496,7 @@ export class Client {
       "vars": vars
     };
     return this.apiClient.authenticateCustom(request, create, username, options).then((apiSession : ApiSession) => {
-      return Session.restore(apiSession.token || "");
+      return Session.restore(apiSession.token || "", apiSession.refresh_token || "");
     });
   }
 
@@ -508,7 +508,7 @@ export class Client {
     };
 
     return this.apiClient.authenticateDevice(request, create, username).then((apiSession : ApiSession) => {
-      return Session.restore(apiSession.token || "");
+      return Session.restore(apiSession.token || "", apiSession.refresh_token || "");
     });
   }
 
@@ -521,7 +521,7 @@ export class Client {
     };
 
     return this.apiClient.authenticateEmail(request, create, username).then((apiSession : ApiSession) => {
-      return Session.restore(apiSession.token || "");
+      return Session.restore(apiSession.token || "", apiSession.refresh_token || "");
     });
   }
 
@@ -534,7 +534,7 @@ export class Client {
 
     return this.apiClient.authenticateFacebookInstantGame(
       {signed_player_info: request.signed_player_info, vars: request.vars}, create, username, options).then((apiSession : ApiSession) => {
-        return Session.restore(apiSession.token || "");
+        return Session.restore(apiSession.token || "", apiSession.refresh_token || "");
       });
   }
 
@@ -546,7 +546,7 @@ export class Client {
     };
 
     return this.apiClient.authenticateFacebook(request, create, username, sync, options).then((apiSession : ApiSession) => {
-      return Session.restore(apiSession.token || "");
+      return Session.restore(apiSession.token || "", apiSession.refresh_token || "");
     });
   }
 
@@ -558,7 +558,7 @@ export class Client {
     };
 
     return this.apiClient.authenticateGoogle(request, create, username, options).then((apiSession : ApiSession) => {
-      return Session.restore(apiSession.token || "");
+      return Session.restore(apiSession.token || "", apiSession.refresh_token || "");
     });
   }
 
@@ -570,7 +570,7 @@ export class Client {
     };
 
     return this.apiClient.authenticateGameCenter(request, create, username).then((apiSession : ApiSession) => {
-      return Session.restore(apiSession.token || "");
+      return Session.restore(apiSession.token || "", apiSession.refresh_token || "");
     });
   }
 
@@ -582,7 +582,7 @@ export class Client {
     };
 
     return this.apiClient.authenticateSteam(request, create, username).then((apiSession : ApiSession) => {
-      return Session.restore(apiSession.token || "");
+      return Session.restore(apiSession.token || "", apiSession.refresh_token || "");
     });
   }
 
@@ -1382,6 +1382,15 @@ export class Client {
         throw err;
       });
   }
+
+  sessionRefresh(session: Session) : Promise<Session>{
+    const request = {
+        token: session.refresh_token
+    };
+    return this.apiClient.sessionRefresh(request).then((apiSession : ApiSession) => {
+        return Session.restore(apiSession.token || "", apiSession.refresh_token || "");
+    });
+  };
 
   /** Remove the Apple ID from the social profiles on the current user's account. */
   unlinkApple(session: Session, request: ApiAccountApple): Promise<boolean> {

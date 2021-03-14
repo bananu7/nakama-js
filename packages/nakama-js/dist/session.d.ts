@@ -1,7 +1,9 @@
 export interface ISession {
     readonly token: string;
+    readonly refresh_token: string;
     readonly created_at: number;
     readonly expires_at: number;
+    readonly refresh_expires_at: number;
     readonly username: string;
     readonly user_id: string;
     readonly vars: object;
@@ -9,8 +11,10 @@ export interface ISession {
 }
 export declare class Session {
     readonly token: string;
+    readonly refresh_token: string;
     readonly created_at: number;
     readonly expires_at: number;
+    readonly refresh_expires_at: number;
     readonly username: string;
     readonly user_id: string;
     readonly vars: object;
