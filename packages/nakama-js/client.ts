@@ -1384,6 +1384,7 @@ export class Client {
   }
 
   sessionRefresh(session: Session) : Promise<Session>{
+    this.configuration.bearerToken = undefined;
     const request = {
         token: session.refresh_token
     };
